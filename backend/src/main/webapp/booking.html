@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Parking Slot - Smart Parking</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            min-height: 100vh;
+            background:
+                linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.55)),
+                url("https://images.unsplash.com/photo-1506521781263-d8422e82f27a?auto=format&fit=crop&w=1600&q=80");
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+
+        .container {
+            width: 500px;
+            max-width: 95%;
+            margin: 40px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        h1 {
+            text-align: center;
+            color: #087f5b;
+            margin-bottom: 25px;
+        }
+
+        .selected-slot {
+            background: #e8f5e9;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-top: 15px;
+            margin-bottom: 7px;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 14px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 9px;
+        }
+
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: #198754;
+        }
+
+        .amount {
+            margin-top: 20px;
+            padding: 18px;
+            background: #fff3cd;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 23px;
+            font-weight: bold;
+        }
+
+        button {
+            width: 100%;
+            margin-top: 20px;
+            padding: 15px;
+            border: none;
+            border-radius: 9px;
+            background: #198754;
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #146c43;
+        }
+
+        button:disabled {
+            background: #999;
+            cursor: not-allowed;
+        }
+
+        #message {
+            text-align: center;
+            font-weight: bold;
+            margin-top: 15px;
+            min-height: 25px;
+        }
+
+        .back {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            color: #087f5b;
+            text-decoration: none;
+            font-size: 17px;
+        }
+
+        .back:hover {
+            text-decoration: underline;
+        }
+
+        @media(max-width:600px) {
+            .container {
+                margin: 20px auto;
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>Book Parking Slot</h1>
+
+    <div class="selected-slot">
+        Selected Slot:
+        <span id="selectedSlot">---</span>
+    </div>
+
+    <form id="bookingForm">
+
+        <label>Vehicle Number</label>
+        <input
+            type="text"
+            id="vehicleNumber"
+            placeholder="KA01AB1234"
+            required
+        >
+
+        <label>Vehicle Type</label>
+        <select id="vehicleType" required>
+            <option value="Car">Car</option>
+            <option value="Bike">Bike</option>
+            <option value="Auto">Auto</option>
+            <option value="Other">Other</option>
+        </select>
+
+        <label>Parking Date</label>
+        <input
+            type="date"
+            id="parkingDate"
+            required
+        >
+
+        <label>Arrival Time</label>
+        <input
+            type="time"
+            id="arrivalTime"
+            required
+        >
+
+        <label>Parking Hours</label>
+        <select id="parkingHours" required>
+            <option value="1">1 Hour</option>
+            <option value="2">2 Hours</option>
+            <option value="3">3 Hours</option>
+            <option value="4">4 Hours</option>
+            <option value="5">5 Hours</option>
+            <option value="6">6 Hours</option>
+            <option value="7">7 Hours</option>
+            <option value="8">8 Hours</option>
+        </select>
+
+        <div class="amount">
+            Amount: <span id="amount">&#8377;50</span>
+        </div>
+
+        <button type="submit" id="bookingButton">
+            Confirm Booking
+        </button>
+
+        <div id="message"></div>
+
+    </form>
+
+    <a href="parking.html" class="back">
+        &#8592; Back to Parking
+    </a>
+
+</div>
+
+
+<script>
+
+    // -----------------------------
+    // GET SELECTED SLOT
+    // -----------------------------
+
+    const slotNumber =
+        localStorage.getItem("selectedSlot");
+
+    const selectedSlot =
+        document.getElementById("selectedSlot");
+
+    if (!slotNumber) {
+
+        selectedSlot.textContent = "No slot selected";
+
+    } else {
+
+        selectedSlot.textContent = slotNumber;
+    }
+
+
+    // -----------------------------
+    // GET USER ID
+    // -----------------------------
+
+    const userId =
+        localStorage.getItem("userId");
+
+
+    // -----------------------------
+    // ELEMENTS
+    // -----------------------------
+
+    const bookingForm =
+        document.getElementById("bookingForm");
+
+    const vehicleNumber =
+        document.getElementById("vehicleNumber");
+
+    const vehicleType =
+        document.getElementById("vehicleType");
+
+    const parkingDate =
+        document.getElementById("parkingDate");
+
+    const arrivalTime =
+        document.getElementById("arrivalTime");
+
+    const parkingHours =
+        document.getElementById("parkingHours");
+
+    const amount =
+        document.getElementById("amount");
+
+    const message =
+        document.getElementById("message");
+
+    const bookingButton =
+        document.getElementById("bookingButton");
+
+
+    // -----------------------------
+    // SET TODAY DATE
+    // -----------------------------
+
+    const today =
+        new Date().toISOString().split("T")[0];
+
+    parkingDate.value = today;
+    parkingDate.min = today;
+
+
+    // -----------------------------
+    // CALCULATE AMOUNT
+    // ₹50 PER HOUR
+    // -----------------------------
+
+    function calculateAmount() {
+
+        const hours =
+            parseInt(parkingHours.value);
+
+        const total =
+            hours * 50;
+
+        amount.textContent =
+            "₹" + total;
+
+        return total;
+    }
+
+    parkingHours.addEventListener(
+        "change",
+        calculateAmount
+    );
+
+    calculateAmount();
+
+
+    // -----------------------------
+    // BOOKING SUBMIT
+    // -----------------------------
+
+    bookingForm.addEventListener(
+        "submit",
+        async function(event) {
+
+            event.preventDefault();
+
+            message.textContent = "";
+            message.style.color = "red";
+
+
+            // CHECK LOGIN
+
+            if (!userId) {
+
+                message.textContent =
+                    "Please login again.";
+
+                return;
+            }
+
+
+            // CHECK SLOT
+
+            if (!slotNumber) {
+
+                message.textContent =
+                    "Please select a parking slot.";
+
+                return;
+            }
+
+
+            // GET VALUES
+
+            const vehicle =
+                vehicleNumber.value.trim();
+
+            const type =
+                vehicleType.value;
+
+            const date =
+                parkingDate.value;
+
+            const time =
+                arrivalTime.value;
+
+            const hours =
+                parseInt(parkingHours.value);
+
+            const totalAmount =
+                hours * 50;
+
+
+            // CHECK HOURS
+
+            if (!hours || hours <= 0) {
+
+                message.textContent =
+                    "Please select valid parking hours.";
+
+                return;
+            }
+
+
+            // DISABLE BUTTON
+
+            bookingButton.disabled = true;
+
+            bookingButton.textContent =
+                "Booking...";
+
+
+            // FORM DATA
+
+            const formData =
+                new URLSearchParams();
+
+            formData.append(
+                "userId",
+                userId
+            );
+
+            formData.append(
+                "slotNumber",
+                slotNumber
+            );
+
+            formData.append(
+                "vehicleNumber",
+                vehicle
+            );
+
+            formData.append(
+                "vehicleType",
+                type
+            );
+
+            formData.append(
+                "parkingDate",
+                date
+            );
+
+            formData.append(
+                "arrivalTime",
+                time
+            );
+
+            formData.append(
+                "parkingHours",
+                hours
+            );
+
+
+            try {
+
+                // -----------------------------
+                // SEND TO JAVA BACKEND
+                // -----------------------------
+
+                const response =
+                    await fetch(
+                        "/smart-parking/api/bookings",
+                        {
+                            method: "POST",
+
+                            headers: {
+                                "Content-Type":
+                                    "application/x-www-form-urlencoded"
+                            },
+
+                            body:
+                                formData.toString()
+                        }
+                    );
+
+
+                const data =
+                    await response.json();
+
+
+                // -----------------------------
+                // BOOKING SUCCESS
+                // -----------------------------
+
+                if (data.success) {
+
+                    /*
+                     * SAVE BOOKING DETAILS
+                     * FOR PAYMENT PAGE
+                     */
+
+                    localStorage.setItem(
+                        "bookingSlot",
+                        slotNumber
+                    );
+
+                    localStorage.setItem(
+                        "bookingVehicle",
+                        vehicle
+                    );
+
+                    localStorage.setItem(
+                        "bookingAmount",
+                        data.amount
+                    );
+
+                    localStorage.setItem(
+                        "bookingDate",
+                        date
+                    );
+
+                    localStorage.setItem(
+                        "bookingTime",
+                        time
+                    );
+
+                    localStorage.setItem(
+                        "bookingHours",
+                        hours
+                    );
+
+
+                    message.style.color =
+                        "green";
+
+                    message.textContent =
+                        "Booking successful!";
+
+
+                    /*
+                     * OPEN PAYMENT PAGE
+                     */
+
+                    setTimeout(function() {
+
+                        window.location.href =
+                            "payment.html";
+
+                    }, 800);
+
+
+                } else {
+
+                    message.style.color =
+                        "red";
+
+                    message.textContent =
+                        data.message ||
+                        "Booking failed.";
+
+                    bookingButton.disabled =
+                        false;
+
+                    bookingButton.textContent =
+                        "Confirm Booking";
+                }
+
+
+            } catch (error) {
+
+                console.error(error);
+
+                message.style.color =
+                    "red";
+
+                message.textContent =
+                    "Cannot connect to Java backend.";
+
+                bookingButton.disabled =
+                    false;
+
+                bookingButton.textContent =
+                    "Confirm Booking";
+            }
+
+        }
+    );
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Book Parking - Smart Parking</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #123b63, #08a9d1);
+            padding: 30px;
+        }
+
+        nav {
+            background: #123b63;
+            color: white;
+            padding: 18px 6%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 10px;
+            max-width: 1100px;
+            margin: auto;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 25px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+        }
+
+        .booking-container {
+            width: 100%;
+            max-width: 500px;
+            background: white;
+            margin: 40px auto;
+            padding: 35px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+        }
+
+        .logo-icon {
+            text-align: center;
+            font-size: 40px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #123b63;
+            margin: 10px 0;
+        }
+
+        .selected-slot {
+            background: #e0f7ff;
+            color: #087fa5;
+            text-align: center;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 7px;
+            font-weight: bold;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 13px;
+            border: 1px solid #ccc;
+            border-radius: 7px;
+            font-size: 15px;
+        }
+
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: #08a9d1;
+        }
+
+        .amount {
+            background: #f1f5f9;
+            padding: 15px;
+            text-align: center;
+            border-radius: 8px;
+            margin: 20px 0;
+            font-size: 20px;
+            font-weight: bold;
+            color: #123b63;
+        }
+
+        .book-button {
+            width: 100%;
+            padding: 14px;
+            background: #08a9d1;
+            color: white;
+            border: none;
+            border-radius: 7px;
+            font-size: 17px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .book-button:hover {
+            background: #087fa5;
+        }
+
+        #message {
+            text-align: center;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        .back {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            color: #123b63;
+            text-decoration: none;
+        }
+
+        @media (max-width: 600px) {
+
+            body {
+                padding: 15px;
+            }
+
+            nav {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            nav ul {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .booking-container {
+                padding: 25px 20px;
+            }
+        }
+
+    </style>
+</head>
+
+<body>
+
+<nav>
+
+    <div class="logo">
+        🚗 Smart Parking
+    </div>
+
+    <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="parking.html">Parking</a></li>
+        <li><a href="booking.html">Booking</a></li>
+        <li><a href="payment.html">Payment</a></li>
+    </ul>
+
+</nav>
+
+
+<div class="booking-container">
+
+    <div class="logo-icon">
+        📅
+    </div>
+
+    <h1>Book Parking Slot</h1>
+
+    <div class="selected-slot">
+        Selected Slot:
+        <span id="selectedSlot">---</span>
+    </div>
+
+
+    <form onsubmit="makeBooking(event)">
+
+        <div class="form-group">
+
+            <label>
+                Vehicle Number
+            </label>
+
+            <input
+                type="text"
+                id="vehicleNumber"
+                placeholder="Example: KA01AB1234"
+                required
+            >
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>
+                Vehicle Type
+            </label>
+
+            <select id="vehicleType" required>
+
+                <option value="">
+                    Select Vehicle
+                </option>
+
+                <option value="Car">
+                    Car
+                </option>
+
+                <option value="Bike">
+                    Bike
+                </option>
+
+                <option value="Auto">
+                    Auto
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>
+                Parking Date
+            </label>
+
+            <input
+                type="date"
+                id="parkingDate"
+                required
+            >
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>
+                Arrival Time
+            </label>
+
+            <input
+                type="time"
+                id="arrivalTime"
+                required
+            >
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>
+                Parking Hours
+            </label>
+
+            <select
+                id="parkingHours"
+                onchange="calculateAmount()"
+                required>
+
+                <option value="">
+                    Select Hours
+                </option>
+
+                <option value="1">1 Hour</option>
+                <option value="2">2 Hours</option>
+                <option value="3">3 Hours</option>
+                <option value="4">4 Hours</option>
+                <option value="5">5 Hours</option>
+                <option value="6">6 Hours</option>
+
+            </select>
+
+        </div>
+
+
+        <div class="amount">
+
+            Amount:
+            ₹<span id="amount">0</span>
+
+        </div>
+
+
+        <button
+            type="submit"
+            class="book-button">
+
+            Confirm Booking
+
+        </button>
+
+    </form>
+
+
+    <div id="message"></div>
+
+
+    <a href="parking.html" class="back">
+        ← Back to Parking
+    </a>
+
+</div>
+
+
+<script>
+
+const API_URL =
+    "http://localhost:8080/smart-parking";
+
+
+const selectedSlot =
+    localStorage.getItem("selectedSlot");
+
+
+document.getElementById("selectedSlot")
+    .textContent =
+    selectedSlot || "Not Selected";
+
+
+/* Set today's date */
+
+const today =
+    new Date().toISOString().split("T")[0];
+
+document.getElementById("parkingDate")
+    .min = today;
+
+document.getElementById("parkingDate")
+    .value = today;
+
+
+/* Calculate amount */
+
+function calculateAmount() {
+
+    const hours =
+        Number(
+            document.getElementById("parkingHours").value
+        );
+
+    const amount =
+        hours * 50;
+
+    document.getElementById("amount")
+        .textContent = amount;
+}
+
+
+/* Booking */
+
+async function makeBooking(event) {
+
+    event.preventDefault();
+
+
+    const userId =
+        localStorage.getItem("userId");
+
+
+    if (!userId) {
+
+        alert("Please login before booking.");
+
+        window.location.href =
+            "login.html";
+
+        return;
+    }
+
+
+    if (!selectedSlot) {
+
+        alert("Please select a parking slot.");
+
+        window.location.href =
+            "parking.html";
+
+        return;
+    }
+
+
+    const vehicleNumber =
+        document.getElementById("vehicleNumber")
+            .value.trim();
+
+
+    const vehicleType =
+        document.getElementById("vehicleType")
+            .value;
+
+
+    const parkingDate =
+        document.getElementById("parkingDate")
+            .value;
+
+
+    const arrivalTime =
+        document.getElementById("arrivalTime")
+            .value;
+
+
+    const parkingHours =
+        document.getElementById("parkingHours")
+            .value;
+
+
+    const message =
+        document.getElementById("message");
+
+
+    const formData =
+        new URLSearchParams();
+
+
+    formData.append(
+        "userId",
+        userId
+    );
+
+    formData.append(
+        "slotNumber",
+        selectedSlot
+    );
+
+    formData.append(
+        "vehicleNumber",
+        vehicleNumber
+    );
+
+    formData.append(
+        "vehicleType",
+        vehicleType
+    );
+
+    formData.append(
+        "parkingDate",
+        parkingDate
+    );
+
+    formData.append(
+        "arrivalTime",
+        arrivalTime
+    );
+
+    formData.append(
+        "parkingHours",
+        parkingHours
+    );
+
+
+    try {
+
+        const response =
+            await fetch(
+                API_URL + "/api/bookings",
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/x-www-form-urlencoded"
+                    },
+
+                    body: formData
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (data.success) {
+
+            localStorage.setItem(
+                "bookingAmount",
+                data.amount
+            );
+
+            localStorage.setItem(
+                "bookingSlot",
+                selectedSlot
+            );
+
+            localStorage.setItem(
+                "vehicleNumber",
+                vehicleNumber
+            );
+
+
+            message.style.color =
+                "green";
+
+            message.innerHTML =
+                "Booking successful!";
+
+
+            setTimeout(function() {
+
+                window.location.href =
+                    "payment.html";
+
+            }, 1000);
+
+        } else {
+
+            message.style.color =
+                "red";
+
+            message.innerHTML =
+                data.message ||
+                "Booking failed.";
+
+        }
+
+    } catch (error) {
+
+        console.error(error);
+
+        message.style.color =
+            "red";
+
+        message.innerHTML =
+            "Cannot connect to Java backend.";
+
+    }
+
+}
+
+</script>
+
+</body>
+</html>

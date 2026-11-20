@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Parking Slots - Smart Parking</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f1f5f9;
+            min-height: 100vh;
+        }
+
+        /* NAVBAR */
+
+        nav {
+            background: #123f68;
+            color: white;
+
+            height: 70px;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            padding: 0 7%;
+        }
+
+        .logo {
+            font-size: 26px;
+            font-weight: bold;
+        }
+
+        nav ul {
+            display: flex;
+            gap: 28px;
+            list-style: none;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 17px;
+        }
+
+        nav ul li a:hover {
+            color: #21c5ed;
+        }
+
+        /* MAIN */
+
+        .container {
+            max-width: 1100px;
+            margin: 45px auto;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #123f68;
+            font-size: 38px;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            font-size: 17px;
+            margin-bottom: 25px;
+        }
+
+        /* CONNECTION STATUS */
+
+        #connectionStatus {
+            width: fit-content;
+            margin: 20px auto 35px;
+
+            padding: 12px 25px;
+
+            border-radius: 30px;
+
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .checking {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .connected {
+            background: #d1fae5;
+            color: #047857;
+        }
+
+        .error {
+            background: #fee2e2;
+            color: #b91c1c;
+        }
+
+        /* SLOT GRID */
+
+        #slotContainer {
+            display: grid;
+
+            grid-template-columns:
+                repeat(4, 1fr);
+
+            gap: 25px;
+        }
+
+        .slot-card {
+            background: white;
+
+            border-radius: 15px;
+
+            padding: 25px;
+
+            text-align: center;
+
+            box-shadow:
+                0 5px 18px
+                rgba(0, 0, 0, 0.12);
+
+            transition: 0.3s;
+        }
+
+        .slot-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .slot-number {
+            font-size: 30px;
+            font-weight: bold;
+
+            color: #123f68;
+
+            margin-bottom: 10px;
+        }
+
+        .available {
+            color: #16a34a;
+            font-weight: bold;
+
+            margin-bottom: 15px;
+        }
+
+        .occupied {
+            color: #dc2626;
+            font-weight: bold;
+
+            margin-bottom: 15px;
+        }
+
+        .book-btn {
+            border: none;
+
+            background: #08a9d1;
+
+            color: white;
+
+            padding: 11px 25px;
+
+            border-radius: 7px;
+
+            cursor: pointer;
+
+            font-size: 15px;
+
+            font-weight: bold;
+        }
+
+        .book-btn:hover {
+            background: #087fa5;
+        }
+
+        .book-btn:disabled {
+            background: #aaa;
+            cursor: not-allowed;
+        }
+
+        /* ERROR */
+
+        #errorMessage {
+            display: none;
+
+            text-align: center;
+
+            background: #fee2e2;
+
+            color: #991b1b;
+
+            padding: 20px;
+
+            border-radius: 10px;
+
+            margin-top: 20px;
+        }
+
+        /* FOOTER */
+
+        footer {
+            margin-top: 50px;
+
+            background: #123f68;
+
+            color: white;
+
+            text-align: center;
+
+            padding: 20px;
+        }
+
+        /* MOBILE */
+
+        @media (max-width: 800px) {
+
+            #slotContainer {
+                grid-template-columns:
+                    repeat(2, 1fr);
+            }
+
+            nav {
+                padding: 0 20px;
+            }
+
+            nav ul {
+                gap: 12px;
+            }
+
+        }
+
+        @media (max-width: 500px) {
+
+            #slotContainer {
+                grid-template-columns: 1fr;
+            }
+
+            nav {
+                height: auto;
+                padding: 20px;
+
+                flex-direction: column;
+                gap: 15px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- NAVBAR -->
+
+<nav>
+
+    <div class="logo">
+        🚗 Smart Parking
+    </div>
+
+    <ul>
+
+        <li>
+            <a href="index.html">
+                Home
+            </a>
+        </li>
+
+        <li>
+            <a href="dashboard.html">
+                Dashboard
+            </a>
+        </li>
+
+        <li>
+            <a href="parking.html">
+                Parking
+            </a>
+        </li>
+
+        <li>
+            <a href="booking.html">
+                Booking
+            </a>
+        </li>
+
+        <li>
+            <a href="payment.html">
+                Payment
+            </a>
+        </li>
+
+    </ul>
+
+</nav>
+
+
+<!-- MAIN -->
+
+<div class="container">
+
+    <h1>
+        Available Parking Slots
+    </h1>
+
+    <p class="subtitle">
+        Select an available parking slot.
+    </p>
+
+
+    <!-- BACKEND STATUS -->
+
+    <div
+        id="connectionStatus"
+        class="checking">
+
+        🟡 Connecting to Backend...
+
+    </div>
+
+
+    <!-- ERROR -->
+
+    <div id="errorMessage">
+
+        <strong>
+            Backend connection failed.
+        </strong>
+
+        <br><br>
+
+        Make sure Tomcat is running and open:
+
+        <br><br>
+
+        <b>
+            http://localhost:8080/smart-parking/api/slots
+        </b>
+
+    </div>
+
+
+    <!-- SLOTS -->
+
+    <div id="slotContainer">
+
+    </div>
+
+
+</div>
+
+
+<!-- FOOTER -->
+
+<footer>
+
+    © 2026 Smart Parking Management System
+
+</footer>
+
+
+<script>
+
+    /*
+        IMPORTANT:
+        This is your Java/Tomcat backend URL.
+    */
+
+    const API_URL =
+        "http://localhost:8080/smart-parking";
+
+
+    const statusBox =
+        document.getElementById("connectionStatus");
+
+
+    const slotContainer =
+        document.getElementById("slotContainer");
+
+
+    const errorMessage =
+        document.getElementById("errorMessage");
+
+
+    /*
+        LOAD PARKING SLOTS
+    */
+
+    async function loadSlots() {
+
+        statusBox.className = "checking";
+
+        statusBox.innerHTML =
+            "🟡 Connecting to Backend...";
+
+
+        try {
+
+            const response =
+                await fetch(
+                    API_URL + "/api/slots",
+                    {
+                        method: "GET"
+                    }
+                );
+
+
+            if (!response.ok) {
+
+                throw new Error(
+                    "HTTP Error: " +
+                    response.status
+                );
+
+            }
+
+
+            const slots =
+                await response.json();
+
+
+            console.log(
+                "Backend response:",
+                slots
+            );
+
+
+            /*
+                BACKEND CONNECTED
+            */
+
+            statusBox.className =
+                "connected";
+
+            statusBox.innerHTML =
+                "🟢 Backend Connected";
+
+
+            errorMessage.style.display =
+                "none";
+
+
+            /*
+                DISPLAY SLOTS
+            */
+
+            slotContainer.innerHTML = "";
+
+
+            slots.forEach(function(slot) {
+
+                const card =
+                    document.createElement("div");
+
+
+                card.className =
+                    "slot-card";
+
+
+                const isAvailable =
+                    slot.status === "AVAILABLE";
+
+
+                card.innerHTML = `
+
+                    <div class="slot-number">
+                        ${slot.slotNumber}
+                    </div>
+
+                    <div class="${
+                        isAvailable
+                        ? "available"
+                        : "occupied"
+                    }">
+
+                        ${
+                            isAvailable
+                            ? "🟢 Available"
+                            : "🔴 Occupied"
+                        }
+
+                    </div>
+
+                    <button
+                        class="book-btn"
+                        ${
+                            isAvailable
+                            ? ""
+                            : "disabled"
+                        }
+                        onclick="
+                            selectSlot('${slot.slotNumber}')
+                        "
+                    >
+
+                        ${
+                            isAvailable
+                            ? "Book Now"
+                            : "Occupied"
+                        }
+
+                    </button>
+
+                `;
+
+
+                slotContainer.appendChild(card);
+
+            });
+
+
+        }
+
+        catch (error) {
+
+            console.error(
+                "Backend Error:",
+                error
+            );
+
+
+            statusBox.className =
+                "error";
+
+
+            statusBox.innerHTML =
+                "🔴 Backend Not Connected";
+
+
+            errorMessage.style.display =
+                "block";
+
+
+            slotContainer.innerHTML = "";
+
+        }
+
+    }
+
+
+    /*
+        SELECT SLOT
+    */
+
+    function selectSlot(slotNumber) {
+
+        localStorage.setItem(
+            "selectedSlot",
+            slotNumber
+        );
+
+
+        window.location.href =
+            "booking.html";
+
+    }
+
+
+    /*
+        START
+    */
+
+    loadSlots();
+
+</script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Smart Parking Management System</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f4f7fa;
+            color: #222;
+        }
+
+        /* Navigation */
+        nav {
+            background: #12365a;
+            color: white;
+            padding: 18px 6%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        nav h2 {
+            font-size: 23px;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 22px;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        nav a:hover {
+            color: #00d4ff;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 400px;
+            padding: 100px 20px;
+            text-align: center;
+            color: white;
+
+            background:
+                linear-gradient(
+                    rgba(0, 0, 0, 0.72),
+                    rgba(0, 0, 0, 0.72)
+                ),
+                url("https://images.unsplash.com/photo- parking");
+
+            background-color: #172b40;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .hero h1 {
+            font-size: 46px;
+            margin-bottom: 20px;
+        }
+
+        .hero p {
+            font-size: 19px;
+            margin-bottom: 28px;
+            line-height: 1.6;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 15px 32px;
+            background: #08a9c7;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 18px;
+            text-decoration: none;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .btn:hover {
+            background: #087f9b;
+            transform: translateY(-2px);
+        }
+
+        /* Features */
+        .features {
+            padding: 55px 5%;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 25px;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 35px 20px;
+            text-align: center;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.10);
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-7px);
+            box-shadow: 0 8px 22px rgba(0, 0, 0, 0.16);
+        }
+
+        .feature-icon {
+            font-size: 42px;
+            margin-bottom: 18px;
+        }
+
+        .feature-card h3 {
+            margin-bottom: 12px;
+            font-size: 22px;
+        }
+
+        .feature-card p {
+            font-size: 16px;
+            line-height: 1.5;
+        }
+
+        /* Footer */
+        footer {
+            background: #12365a;
+            color: white;
+            text-align: center;
+            padding: 22px;
+            margin-top: 0;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 900px) {
+            .features {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .hero h1 {
+                font-size: 36px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            nav {
+                flex-direction: column;
+            }
+
+            nav ul {
+                justify-content: center;
+                gap: 15px;
+            }
+
+            .features {
+                grid-template-columns: 1fr;
+            }
+
+            .hero {
+                padding: 75px 18px;
+            }
+
+            .hero h1 {
+                font-size: 30px;
+            }
+
+            .hero p {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navigation Bar -->
+    <nav>
+        <h2>🚗 Smart Parking</h2>
+
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="parking.html">Find Parking</a></li>
+            <li><a href="booking.html">Book Slot</a></li>
+            <li><a href="dashboard.html">Dashboard</a></li>
+            <li><a href="login.html">Login</a></li>
+            <li><a href="register.html">Register</a></li>
+            <li><a href="admin.html">Admin</a></li>
+        </ul>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <h1>Smart Parking Management System</h1>
+
+        <p>
+            Find available parking spaces, book your parking slot,
+            and manage your parking easily.
+        </p>
+
+        <a href="parking.html" class="btn">
+            Find Parking
+        </a>
+    </section>
+
+    <!-- Feature Cards -->
+    <section class="features">
+
+        <div class="feature-card"
+             onclick="openPage('parking.html')">
+
+            <div class="feature-icon">🅿️</div>
+
+            <h3>Find Parking</h3>
+
+            <p>
+                Check available parking slots quickly.
+            </p>
+        </div>
+
+        <div class="feature-card"
+             onclick="openPage('booking.html')">
+
+            <div class="feature-icon">📅</div>
+
+            <h3>Book Slot</h3>
+
+            <p>
+                Reserve your parking slot in advance.
+            </p>
+        </div>
+
+        <div class="feature-card"
+             onclick="openPage('payment.html')">
+
+            <div class="feature-icon">💳</div>
+
+            <h3>Easy Payment</h3>
+
+            <p>
+                Manage your parking payments easily.
+            </p>
+        </div>
+
+        <div class="feature-card"
+             onclick="openPage('dashboard.html')">
+
+            <div class="feature-icon">📊</div>
+
+            <h3>Dashboard</h3>
+
+            <p>
+                View your parking and booking details.
+            </p>
+        </div>
+
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>
+            &copy; 2026 Smart Parking Management System
+        </p>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        function openPage(page) {
+            window.location.href = page;
+        }
+    </script>
+
+</body>
+</html>

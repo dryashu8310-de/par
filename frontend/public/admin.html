@@ -1,0 +1,195 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Admin Dashboard</title>
+
+    <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+<header>
+
+    <div class="logo">
+        🚗 Smart Parking Admin
+    </div>
+
+    <nav>
+
+        <a href="index.html">
+            Home
+        </a>
+
+        <a href="admin.html">
+            Admin
+        </a>
+
+        <a href="login.html">
+            Logout
+        </a>
+
+    </nav>
+
+</header>
+
+
+<div class="admin-container">
+
+    <h1 class="admin-title">
+        Admin Dashboard
+    </h1>
+
+
+    <div class="admin-cards">
+
+
+        <div class="admin-card">
+
+            <h2>
+                👥 Users
+            </h2>
+
+            <p id="totalUsers">
+                0
+            </p>
+
+        </div>
+
+
+        <div class="admin-card">
+
+            <h2>
+                🅿️ Total Slots
+            </h2>
+
+            <p>
+                8
+            </p>
+
+        </div>
+
+
+        <div class="admin-card">
+
+            <h2>
+                🟢 Available
+            </h2>
+
+            <p>
+                5
+            </p>
+
+        </div>
+
+
+        <div class="admin-card">
+
+            <h2>
+                🔴 Occupied
+            </h2>
+
+            <p>
+                3
+            </p>
+
+        </div>
+
+
+        <div class="admin-card">
+
+            <h2>
+                📅 Bookings
+            </h2>
+
+            <p id="totalBookings">
+                0
+            </p>
+
+        </div>
+
+
+        <div class="admin-card">
+
+            <h2>
+                💰 Revenue
+            </h2>
+
+            <p>
+                ₹0
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="dashboard-section">
+
+        <h2>
+            Booking Records
+        </h2>
+
+        <br>
+
+
+        <div class="table-container">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            User
+                        </th>
+
+                        <th>
+                            Slot
+                        </th>
+
+                        <th>
+                            Vehicle
+                        </th>
+
+                        <th>
+                            Date
+                        </th>
+
+                        <th>
+                            Amount
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody id="bookingTable">
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script src="script.js"></script>
+
+</body>
+
+</html>
+

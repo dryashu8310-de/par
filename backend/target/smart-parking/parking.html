@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Parking Slots - Smart Parking</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f1f6fb;
+        }
+
+        nav {
+            background: #124b78;
+            color: white;
+            padding: 22px 8%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 30px;
+            font-weight: bold;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin-left: 25px;
+            font-size: 18px;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1100px;
+            margin: 55px auto;
+            text-align: center;
+        }
+
+        h1 {
+            color: #124b78;
+            font-size: 40px;
+        }
+
+        .subtitle {
+            color: #555;
+            font-size: 18px;
+        }
+
+        .connected {
+            display: inline-block;
+            margin: 25px 0 35px;
+            padding: 14px 30px;
+            border-radius: 30px;
+            background: #d1fae5;
+            color: #087f5b;
+            font-weight: bold;
+        }
+
+        .slots {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 30px;
+        }
+
+        .slot {
+            background: white;
+            padding: 30px 20px;
+            border-radius: 18px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.10);
+        }
+
+        .slot h2 {
+            font-size: 32px;
+            color: #124b78;
+            margin-top: 0;
+        }
+
+        .available {
+            color: #16a34a;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .occupied {
+            color: #dc2626;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        button {
+            border: none;
+            padding: 13px 30px;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+
+        .book {
+            background: #10a9d4;
+            color: white;
+        }
+
+        .cancel {
+            background: #dc3545;
+            color: white;
+        }
+
+        .cancel:hover {
+            background: #b91c2b;
+        }
+
+        .book:hover {
+            background: #078db4;
+        }
+
+        @media(max-width: 900px) {
+            .slots {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media(max-width: 600px) {
+            .slots {
+                grid-template-columns: 1fr;
+            }
+
+            nav {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<nav>
+
+    <div class="logo">
+        🚗 Smart Parking
+    </div>
+
+    <div>
+        <a href="index.html">Home</a>
+        <a href="dashboard.html">Dashboard</a>
+        <a href="parking.html">Parking</a>
+        <a href="booking.html">Booking</a>
+        <a href="payment.html">Payment</a>
+    </div>
+
+</nav>
+
+
+<div class="container">
+
+    <h1>Available Parking Slots</h1>
+
+    <p class="subtitle">
+        Select an available parking slot.
+    </p>
+
+    <div class="connected">
+        🟢 Backend Connected
+    </div>
+
+    <div id="slots" class="slots">
+        Loading...
+    </div>
+
+</div>
+
+
+<script>
+
+const API_URL = "/smart-parking";
+
+
+async function loadSlots() {
+
+    try {
+
+        const response =
+            await fetch(API_URL + "/api/slots");
+
+        const slots =
+            await response.json();
+
+        const container =
+            document.getElementById("slots");
+
+        container.innerHTML = "";
+
+
+        slots.forEach(function(slot) {
+
+            const card =
+                document.createElement("div");
+
+            card.className = "slot";
+
+
+            /*
+             * AVAILABLE
+             */
+
+            if (
+                String(slot.status).toUpperCase()
+                === "AVAILABLE"
+            ) {
+
+                card.innerHTML = `
+
+                    <h2>${slot.slotNumber}</h2>
+
+                    <div class="available">
+                        🟢 Available
+                    </div>
+
+                    <button
+                        class="book"
+                        onclick="bookSlot('${slot.slotNumber}')">
+
+                        Book Now
+
+                    </button>
+
+                `;
+
+            }
+
+
+            /*
+             * OCCUPIED
+             *
+             * IMPORTANT:
+             * This shows CANCEL.
+             */
+
+            else {
+
+                card.innerHTML = `
+
+                    <h2>${slot.slotNumber}</h2>
+
+                    <div class="occupied">
+                        🔴 Occupied
+                    </div>
+
+                    <button
+                        class="cancel"
+                        onclick="cancelSlot('${slot.slotNumber}')">
+
+                        Cancel
+
+                    </button>
+
+                `;
+
+            }
+
+
+            container.appendChild(card);
+
+        });
+
+    }
+
+    catch(error) {
+
+        console.log(error);
+
+        document.getElementById("slots").innerHTML =
+            "<p style='color:red;'>Cannot connect to Java backend.</p>";
+
+    }
+
+}
+
+
+/* BOOK */
+
+function bookSlot(slot) {
+
+    localStorage.setItem(
+        "selectedSlot",
+        slot
+    );
+
+    window.location.href =
+        "booking.html";
+
+}
+
+
+/* CANCEL */
+
+async function cancelSlot(slot) {
+
+    const confirmCancel =
+        confirm(
+            "Cancel booking for " +
+            slot +
+            "?"
+        );
+
+    if (!confirmCancel) {
+        return;
+    }
+
+
+    try {
+
+        const data =
+            new URLSearchParams();
+
+        data.append(
+            "slotNumber",
+            slot
+        );
+
+
+        const response =
+            await fetch(
+                API_URL + "/api/cancel-booking",
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/x-www-form-urlencoded"
+                    },
+
+                    body:
+                        data.toString()
+                }
+            );
+
+
+        const result =
+            await response.json();
+
+
+        if (result.success) {
+
+            alert(
+                "Booking cancelled successfully!"
+            );
+
+            loadSlots();
+
+        }
+
+        else {
+
+            alert(
+                result.message ||
+                "Cancellation failed"
+            );
+
+        }
+
+    }
+
+    catch(error) {
+
+        console.log(error);
+
+        alert(
+            "Cannot connect to Java backend."
+        );
+
+    }
+
+}
+
+
+loadSlots();
+
+</script>
+
+</body>
+</html>

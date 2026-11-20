@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Payment - Smart Parking</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #164b78, #16b5c9);
+            min-height: 100vh;
+            padding: 25px;
+        }
+
+        .navbar {
+            max-width: 1200px;
+            margin: auto;
+            background: #164b78;
+            padding: 20px 30px;
+            border-radius: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            color: white;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            margin-left: 25px;
+            font-size: 17px;
+        }
+
+        .nav-links a:hover {
+            text-decoration: underline;
+        }
+
+        .payment-container {
+            max-width: 600px;
+            margin: 45px auto;
+            background: white;
+            padding: 35px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .icon {
+            text-align: center;
+            font-size: 50px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #164b78;
+        }
+
+        .details {
+            background: #f1f5f9;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 25px 0;
+        }
+
+        .row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #ddd;
+            font-size: 17px;
+        }
+
+        .row:last-child {
+            border-bottom: none;
+        }
+
+        .amount {
+            color: #164b78;
+            font-size: 25px;
+            font-weight: bold;
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        select {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+
+        .pay-button {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            background: #16a34a;
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .pay-button:hover {
+            background: #15803d;
+        }
+
+        .back {
+            display: block;
+            text-align: center;
+            margin-top: 25px;
+            color: #164b78;
+            text-decoration: none;
+            font-size: 17px;
+        }
+
+        .message {
+            text-align: center;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        /* PAYMENT HISTORY */
+
+        .history-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .history-container h2 {
+            text-align: center;
+            color: #164b78;
+            margin-bottom: 25px;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 850px;
+        }
+
+        th {
+            background: #164b78;
+            color: white;
+            padding: 14px;
+            text-align: center;
+        }
+
+        td {
+            padding: 13px;
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+        }
+
+        tr:nth-child(even) {
+            background: #f5f7fa;
+        }
+
+        .paid {
+            color: #16a34a;
+            font-weight: bold;
+        }
+
+        .delete-button {
+            background: #dc2626;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .delete-button:hover {
+            background: #b91c1c;
+        }
+
+        .clear-button {
+            display: block;
+            margin: 25px auto 0;
+            background: #dc2626;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 7px;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        .empty {
+            text-align: center;
+            padding: 25px;
+            color: #777;
+        }
+
+        @media(max-width: 700px) {
+
+            body {
+                padding: 10px;
+            }
+
+            .navbar {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .nav-links a {
+                margin: 5px;
+                display: inline-block;
+            }
+
+            .payment-container {
+                margin: 20px auto;
+                padding: 20px;
+            }
+
+            .history-container {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+
+    <div class="navbar">
+
+        <div class="logo">
+            🚗 Smart Parking
+        </div>
+
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="dashboard.html">Dashboard</a>
+            <a href="parking.html">Parking</a>
+            <a href="booking.html">Booking</a>
+            <a href="payment.html">Payment</a>
+        </div>
+
+    </div>
+
+
+    <!-- PAYMENT -->
+
+    <div class="payment-container">
+
+        <div class="icon">
+            💳
+        </div>
+
+        <h1>Parking Payment</h1>
+
+        <div class="details">
+
+            <div class="row">
+                <span>Parking Slot</span>
+                <strong id="slot">---</strong>
+            </div>
+
+            <div class="row">
+                <span>Vehicle Number</span>
+                <strong id="vehicle">---</strong>
+            </div>
+
+            <div class="row">
+                <span>Amount</span>
+                <strong class="amount" id="amount">₹0</strong>
+            </div>
+
+        </div>
+
+
+        <label>Payment Method</label>
+
+        <select id="paymentMethod">
+
+            <option value="">
+                Select Payment Method
+            </option>
+
+            <option value="UPI">
+                UPI
+            </option>
+
+            <option value="Credit Card">
+                Credit Card
+            </option>
+
+            <option value="Debit Card">
+                Debit Card
+            </option>
+
+            <option value="Net Banking">
+                Net Banking
+            </option>
+
+        </select>
+
+
+        <button class="pay-button" onclick="makePayment()">
+            Pay Now
+        </button>
+
+        <div id="message" class="message"></div>
+
+        <a href="dashboard.html" class="back">
+            ← Back to Dashboard
+        </a>
+
+    </div>
+
+
+    <!-- PAYMENT HISTORY -->
+
+    <div class="history-container">
+
+        <h2>
+            Payment History
+        </h2>
+
+        <div class="table-wrapper">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+                        <th>Sl No</th>
+                        <th>Parking Slot</th>
+                        <th>Vehicle Number</th>
+                        <th>Amount</th>
+                        <th>Payment Method</th>
+                        <th>Date & Time</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+
+                </thead>
+
+                <tbody id="historyTable">
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+        <button class="clear-button" onclick="clearHistory()">
+            Clear Payment History
+        </button>
+
+    </div>
+
+
+<script>
+
+    /* ================================
+       LOAD CURRENT BOOKING
+    ================================= */
+
+    document.addEventListener("DOMContentLoaded", function () {
+
+        let slot =
+            localStorage.getItem("bookingSlot");
+
+        let vehicle =
+            localStorage.getItem("bookingVehicle");
+
+        let amount =
+            localStorage.getItem("bookingAmount");
+
+
+        if (slot) {
+
+            document.getElementById("slot").textContent =
+                slot;
+
+        }
+
+
+        if (vehicle) {
+
+            document.getElementById("vehicle").textContent =
+                vehicle;
+
+        }
+
+
+        if (amount) {
+
+            document.getElementById("amount").textContent =
+                "₹" + amount;
+
+        }
+
+
+        loadPaymentHistory();
+
+    });
+
+
+    /* ================================
+       MAKE PAYMENT
+    ================================= */
+
+    function makePayment() {
+
+        let slot =
+            localStorage.getItem("bookingSlot");
+
+        let vehicle =
+            localStorage.getItem("bookingVehicle");
+
+        let amount =
+            localStorage.getItem("bookingAmount");
+
+        let method =
+            document.getElementById("paymentMethod").value;
+
+
+        if (!slot || !vehicle || !amount) {
+
+            document.getElementById("message").innerHTML =
+                "<span style='color:red'>No booking information found.</span>";
+
+            return;
+        }
+
+
+        if (!method) {
+
+            document.getElementById("message").innerHTML =
+                "<span style='color:red'>Please select payment method.</span>";
+
+            return;
+        }
+
+
+        let now =
+            new Date();
+
+
+        let dateTime =
+            now.toLocaleDateString("en-GB")
+            + " "
+            + now.toLocaleTimeString("en-IN");
+
+
+        let payment = {
+
+            slot: slot,
+
+            vehicle: vehicle,
+
+            amount: amount,
+
+            method: method,
+
+            dateTime: dateTime,
+
+            status: "PAID"
+
+        };
+
+
+        /* GET OLD PAYMENT HISTORY */
+
+        let history =
+            JSON.parse(
+                localStorage.getItem("paymentHistory")
+            ) || [];
+
+
+        /* ADD NEW PAYMENT */
+
+        history.push(payment);
+
+
+        /* SAVE PAYMENT HISTORY */
+
+        localStorage.setItem(
+            "paymentHistory",
+            JSON.stringify(history)
+        );
+
+
+        /* SHOW SUCCESS */
+
+        document.getElementById("message").innerHTML =
+            "<span style='color:green'>Payment successful!</span>";
+
+
+        /* REFRESH TABLE */
+
+        loadPaymentHistory();
+
+
+        /* REMOVE CURRENT PAYMENT DATA */
+
+        localStorage.removeItem("bookingSlot");
+
+        localStorage.removeItem("bookingVehicle");
+
+        localStorage.removeItem("bookingAmount");
+
+    }
+
+
+    /* ================================
+       LOAD PAYMENT HISTORY
+    ================================= */
+
+    function loadPaymentHistory() {
+
+        let history =
+            JSON.parse(
+                localStorage.getItem("paymentHistory")
+            ) || [];
+
+
+        let table =
+            document.getElementById("historyTable");
+
+
+        table.innerHTML = "";
+
+
+        if (history.length === 0) {
+
+            table.innerHTML =
+                `
+                <tr>
+                    <td colspan="8" class="empty">
+                        No payment history found.
+                    </td>
+                </tr>
+                `;
+
+            return;
+        }
+
+
+        history.forEach(function (payment, index) {
+
+            let row =
+                document.createElement("tr");
+
+
+            row.innerHTML = `
+
+                <td>${index + 1}</td>
+
+                <td>${payment.slot}</td>
+
+                <td>${payment.vehicle}</td>
+
+                <td>₹${payment.amount}</td>
+
+                <td>${payment.method}</td>
+
+                <td>${payment.dateTime}</td>
+
+                <td class="paid">
+                    ${payment.status}
+                </td>
+
+                <td>
+
+                    <button
+                        class="delete-button"
+                        onclick="deletePayment(${index})">
+                        Delete
+                    </button>
+
+                </td>
+
+            `;
+
+
+            table.appendChild(row);
+
+        });
+
+    }
+
+
+    /* ================================
+       DELETE ONE PAYMENT
+    ================================= */
+
+    function deletePayment(index) {
+
+        let history =
+            JSON.parse(
+                localStorage.getItem("paymentHistory")
+            ) || [];
+
+
+        history.splice(index, 1);
+
+
+        localStorage.setItem(
+            "paymentHistory",
+            JSON.stringify(history)
+        );
+
+
+        loadPaymentHistory();
+
+    }
+
+
+    /* ================================
+       CLEAR ALL PAYMENT HISTORY
+    ================================= */
+
+    function clearHistory() {
+
+        if (
+            confirm(
+                "Are you sure you want to clear all payment history?"
+            )
+        ) {
+
+            localStorage.removeItem(
+                "paymentHistory"
+            );
+
+            loadPaymentHistory();
+
+        }
+
+    }
+
+</script>
+
+</body>
+</html>

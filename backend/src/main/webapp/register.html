@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Register - Smart Parking</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            font-family: Arial, sans-serif;
+
+            background:
+                linear-gradient(
+                    rgba(0, 90, 130, 0.85),
+                    rgba(0, 160, 200, 0.85)
+                );
+        }
+
+        .register-box {
+
+            width: 485px;
+
+            background: white;
+
+            padding: 35px 38px;
+
+            border-radius: 5px;
+
+            box-shadow:
+                0 10px 30px rgba(0,0,0,0.25);
+        }
+
+        h1 {
+
+            text-align: center;
+
+            margin: 0;
+
+            color: #12466b;
+
+            font-size: 34px;
+        }
+
+        .subtitle {
+
+            text-align: center;
+
+            margin: 8px 0 28px;
+
+            color: #666;
+
+            font-size: 18px;
+        }
+
+        label {
+
+            display: block;
+
+            margin-top: 15px;
+            margin-bottom: 7px;
+
+            font-weight: bold;
+
+            font-size: 16px;
+        }
+
+        input {
+
+            width: 100%;
+
+            padding: 13px;
+
+            border: 1px solid #ccc;
+
+            border-radius: 8px;
+
+            font-size: 16px;
+
+            outline: none;
+        }
+
+        input:focus {
+
+            border-color: #0fa8d0;
+
+            box-shadow:
+                0 0 5px rgba(15,168,208,0.3);
+        }
+
+        button {
+
+            width: 100%;
+
+            margin-top: 28px;
+
+            padding: 14px;
+
+            border: none;
+
+            border-radius: 8px;
+
+            background: #12a9d0;
+
+            color: white;
+
+            font-size: 18px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+        }
+
+        button:hover {
+
+            background: #078db0;
+        }
+
+        button:disabled {
+
+            background: #999;
+
+            cursor: not-allowed;
+        }
+
+        #message {
+
+            text-align: center;
+
+            margin-top: 18px;
+
+            font-weight: bold;
+
+            min-height: 22px;
+        }
+
+        .login {
+
+            text-align: center;
+
+            margin-top: 22px;
+
+            font-size: 17px;
+        }
+
+        .login a {
+
+            color: #008eb8;
+
+            font-weight: bold;
+
+            text-decoration: none;
+        }
+
+        .home {
+
+            display: block;
+
+            text-align: center;
+
+            margin-top: 22px;
+
+            color: #12466b;
+
+            text-decoration: none;
+
+            font-size: 16px;
+        }
+
+        @media(max-width:550px) {
+
+            .register-box {
+
+                width: 92%;
+
+                padding: 25px;
+            }
+
+            h1 {
+
+                font-size: 28px;
+            }
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+
+<div class="register-box">
+
+    <h1>Create Account</h1>
+
+    <div class="subtitle">
+        Register for Smart Parking
+    </div>
+
+
+    <form id="registerForm">
+
+
+        <label>Full Name</label>
+
+        <input
+            type="text"
+            id="fullName"
+            placeholder="Enter full name"
+            required
+        >
+
+
+        <label>Email</label>
+
+        <input
+            type="email"
+            id="email"
+            placeholder="Enter email"
+            required
+        >
+
+
+        <label>Phone Number</label>
+
+        <input
+            type="tel"
+            id="phone"
+            placeholder="Enter phone number"
+            maxlength="15"
+            required
+        >
+
+
+        <label>Password</label>
+
+        <input
+            type="password"
+            id="password"
+            placeholder="Enter password"
+            required
+        >
+
+
+        <label>Confirm Password</label>
+
+        <input
+            type="password"
+            id="confirmPassword"
+            placeholder="Confirm password"
+            required
+        >
+
+
+        <button
+            type="submit"
+            id="registerButton">
+            Register
+        </button>
+
+
+    </form>
+
+
+    <div id="message"></div>
+
+
+    <div class="login">
+
+        Already have an account?
+
+        <a href="/smart-parking/login.html">
+            Login
+        </a>
+
+    </div>
+
+
+    <a
+        class="home"
+        href="/smart-parking/">
+        ← Back to Home
+    </a>
+
+</div>
+
+
+
+<script>
+
+
+/*
+==================================================
+IMPORTANT
+==================================================
+If user opens this page using Live Server
+(port 5500), automatically move to Tomcat.
+==================================================
+*/
+
+if (
+    location.port === "5500" ||
+    location.port === "5501" ||
+    location.port === "5502"
+) {
+
+    window.location.href =
+        "http://localhost:8080/smart-parking/register.html";
+
+}
+
+
+
+/*
+==================================================
+JAVA BACKEND
+==================================================
+*/
+
+const API_URL =
+    "http://localhost:8080/smart-parking";
+
+
+
+/*
+==================================================
+REGISTER
+==================================================
+*/
+
+document
+.getElementById("registerForm")
+.addEventListener("submit", async function(event) {
+
+    event.preventDefault();
+
+
+    const message =
+        document.getElementById("message");
+
+    const button =
+        document.getElementById("registerButton");
+
+
+    const fullName =
+        document.getElementById("fullName").value.trim();
+
+    const email =
+        document.getElementById("email").value.trim();
+
+    const phone =
+        document.getElementById("phone").value.trim();
+
+    const password =
+        document.getElementById("password").value;
+
+    const confirmPassword =
+        document.getElementById("confirmPassword").value;
+
+
+
+    /*
+    Password check
+    */
+
+    if (password !== confirmPassword) {
+
+        message.style.color = "red";
+
+        message.textContent =
+            "Passwords do not match.";
+
+        return;
+    }
+
+
+
+    /*
+    Disable button
+    */
+
+    button.disabled = true;
+
+    button.textContent =
+        "Registering...";
+
+
+    message.style.color = "blue";
+
+    message.textContent =
+        "Connecting to Java backend...";
+
+
+
+    /*
+    Send data to Java Servlet
+    */
+
+    const formData =
+        new URLSearchParams();
+
+
+    formData.append(
+        "fullName",
+        fullName
+    );
+
+    formData.append(
+        "email",
+        email
+    );
+
+    formData.append(
+        "phone",
+        phone
+    );
+
+    formData.append(
+        "password",
+        password
+    );
+
+
+
+    try {
+
+
+        const response =
+            await fetch(
+                API_URL + "/api/register",
+                {
+
+                    method: "POST",
+
+                    headers: {
+
+                        "Content-Type":
+                            "application/x-www-form-urlencoded"
+
+                    },
+
+                    body:
+                        formData.toString()
+
+                }
+            );
+
+
+
+        /*
+        Read Java response
+        */
+
+        const data =
+            await response.json();
+
+
+
+        if (
+            response.ok &&
+            data.success
+        ) {
+
+
+            message.style.color =
+                "green";
+
+
+            message.textContent =
+                "Registration successful!";
+
+
+            /*
+            Go to login
+            */
+
+            setTimeout(function() {
+
+                window.location.href =
+                    "/smart-parking/login.html";
+
+            }, 1200);
+
+
+        } else {
+
+
+            message.style.color =
+                "red";
+
+
+            message.textContent =
+                data.message ||
+                "Registration failed.";
+
+
+        }
+
+
+    } catch(error) {
+
+
+        console.error(
+            "Java Backend Error:",
+            error
+        );
+
+
+        message.style.color =
+            "red";
+
+
+        message.textContent =
+            "Java backend is not running. Start Tomcat and refresh.";
+
+
+    }
+
+
+    button.disabled = false;
+
+    button.textContent =
+        "Register";
+
+
+});
+
+</script>
+
+</body>
+
+</html>
