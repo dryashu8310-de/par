@@ -1,0 +1,173 @@
+# 🚗 Smart Parking Management System
+
+## 📌 Project Overview
+
+The **Smart Parking Management System** is a web-based application developed to simplify parking slot management and vehicle parking reservations.
+
+The system allows users to log in, view available parking slots, book parking spaces, manage bookings, and view parking history. It also helps manage parking slot availability and payment information.
+
+This project is developed using Java, Spring Boot, MySQL, HTML, CSS, and JavaScript.
+
+## 🎯 Objectives
+
+- To develop an online parking management system.
+- To display available and occupied parking slots.
+- To allow users to book parking spaces.
+- To manage parking reservations.
+- To maintain booking and payment history.
+- To reduce manual parking management.
+- To provide a simple and user-friendly interface.
+
+## ✨ Main Features
+
+1. **Login** – User authentication.
+2. **Dashboard** – Displays parking information.
+3. **Parking Slots** – View available and occupied slots.
+4. **Slot Booking** – Reserve a parking space.
+5. **Booking Confirmation** – Display booking details.
+6. **My Bookings** – View previous and current bookings.
+7. **Payment** – Manage parking payment information.
+8. **Parking History** – View parking records.
+9. **Location** – Display parking location information.
+10. **Notifications** – Display booking-related notifications.
+11. **Logout** – Securely exit the application.
+
+## 🛠️ Technologies Used
+
+| Technology | Purpose |
+|---|---|
+| HTML5 | Frontend structure |
+| CSS3 | Website design |
+| JavaScript | Frontend functionality |
+| Java 17 | Backend programming |
+| Spring Boot | Backend framework |
+| Maven | Build management |
+| MySQL | Database |
+| Apache Tomcat 10 | Application deployment |
+| VS Code / IntelliJ IDEA | Development tools |
+
+## 📂 Project Structure
+
+```text
+par/
+│
+├── .vscode/
+│
+├── backend/
+│   ├── src/
+│   ├── pom.xml
+│   └── target/
+│       └── smart-parking.war
+│
+├── frontend/
+│   └── public/
+│       ├── index.html
+│       ├── login.html
+│       ├── dashboard.html
+│       ├── booking.html
+│       ├── payment.html
+│       └── ...
+│
+├── run/
+│
+├── run.bat
+│
+└── README.md
+```
+
+## ⚙️ Software Requirements
+
+- Windows 10 / Windows 11
+- Java JDK 17
+- Apache Maven 3.9+
+- MySQL Server
+- Apache Tomcat 10.1+
+- Visual Studio Code or IntelliJ IDEA
+- Web browser
+
+## 🚀 Installation and Execution
+
+### Step 1: Clone the Repository
+
+```bash
+git clone https://github.com/dryashu8310-de/par.git
+```
+
+### Step 2: Open the Project
+
+```bash
+cd par
+```
+
+### Step 3: Configure MySQL
+
+Create the database:
+
+```sql
+CREATE DATABASE smart_parking;
+```
+
+Configure your database username, password, and connection URL in the backend configuration.
+
+### Step 4: Build the Backend
+
+Open PowerShell inside the backend folder:
+
+```bash
+cd backend
+```
+
+Run:
+
+```bash
+mvn clean package
+```
+
+### Step 5: Deploy on Apache Tomcat
+
+Copy the generated WAR file from:
+
+```text
+backend/target/smart-parking.war
+```
+
+Deploy it to the Tomcat `webapps` folder and start Tomcat.
+
+### Step 6: Run the Application
+
+Open your browser and access the application using the deployed Tomcat context path.
+
+Example:
+
+```text
+http://localhost:8080/smart-parking/
+```
+
+The exact URL depends on your Tomcat deployment configuration.
+
+## 🗄️ Database
+
+**Database Name:** `smart_parking`
+
+The database is used to maintain parking slot details, booking information, and related payment records.
+
+## 🔮 Future Enhancements
+
+- Online payment gateway integration.
+- QR code-based parking entry.
+- Real-time parking availability.
+- Google Maps integration.
+- Mobile application support.
+- Automatic parking fee calculation.
+
+## 👩‍💻 Developer
+
+**Project Name:** Smart Parking Management System
+
+**Project Type:** Web-Based Application
+
+**Repository:** https://github.com/dryashu8310-de/par
+
+## 📜 License
+
+This project is developed for educational and academic purposes.
